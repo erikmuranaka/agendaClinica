@@ -1,0 +1,17 @@
+.footer-fixed {
+    position: fixed;         /* Fixa o rodapé na tela */
+    bottom: 0;               /* Posiciona na parte inferior */
+    right: 0;                /* Posiciona no canto direito */
+    background-color: #3899faad; /* Cor de fundo */
+    padding: 10px;           /* Espaçamento interno */
+    font-size: 14px;         /* Tamanho da fonte */
+    box-shadow: -2px -2px 5px rgba(0, 0, 0, 0.1); /* Sombras suaves */
+    border-top-left-radius: 10px; /* Borda arredondada no canto superior esquerdo */
+}
+
+@media (max-width: 768px) {
+    .footer-fixed {
+        font-size: 12px;   /* Reduz o tamanho da fonte em telas menores */
+        padding: 8px;
+    }
+}

@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}Lista de Contas a Pagar{% endblock %}
+{% block content %}
+<h1>Lista de Contas a Pagar</h1>
+<table>
+    <thead>
+        <tr>
+            <th>id</th>
+            <th>Fornecedor</th>
+            <th>Status</th>
+            <th>Descrição</th>
+            <th>Data Vencimento</th>
+            <th>Valor</th>
+            <th>Forma de Pagamento</th>
+            <th>Data do Pagamento</th>
+            <th>Centro de Custo</th>
+            <th>Observação</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for cp in list_contas_pagar %}
+        <tr>
+            <td>{{ cp.id }}</td>
+            <td>{{ cp.idFornecedor }}</td>
+            <td>{{ cp.status }}</td>
+            <td>{{ cp.descricao }}</td>
+            <td>{{ cp.dataVencimento }}</td>
+            <td>{{ cp.valor }}</td>
+            <td>{{ cp.formaPagamento }}</td>
+            <td>{{ cp.dataPagamento }}</td>
+            <td>{{ cp.centroCusto }}</td>
+            <td>{{ cp.observacao }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<a href="{% url 'cadastrar_contas_pagar' %}">Cadastrar Nova Contas a Pagar</a>
+{% endblock %}

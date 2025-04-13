@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}Lista de Contas a Receber{% endblock %}
+{% block content %}
+<h1>Lista de Contas a Receber</h1>
+<table>
+    <thead>
+        <tr>
+            <th>id</th>
+            <th>Médico</th>
+            <th>Paciente</th>
+            <th>Data de Emissão</th>
+            <th>Plano</th>
+            <th>Descrição</th>
+            <th>Tipo de Conta</th>
+            <th>Data Vencimento</th>
+            <th>Data Pagamento</th>
+            <th>Valor</th>
+            <th>Forma de Pagamento</th>
+            <th>Centro de Receita</th>
+            <th>Data Recebimento</th>
+            <th>Observação</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for cr in list_contas_receber %}
+        <tr>
+            <td>{{ cr.id }}</td>
+            <td>{{ cr.Médico }}</td>
+            <td>{{ cr.Paciente }}</td>
+            <td>{{ cr.dataEmissao }}</td>
+            <td>{{ cr.idPlanos }}</td>
+            <td>{{ cr.descricao }}</td>
+            <td>{{ cr.tipoConta }}</td>
+            <td>{{ cr.dataVencimento }}</td>
+            <td>{{ cr.dataPagamento }}</td>
+            <td>{{ cr.valor }}</td>
+            <td>{{ cr.formaPagamento }}</td>
+            <td>{{ cr.centroReceita }}</td>
+            <td>{{ cr.dataRecebimento }}</td>
+            <td>{{ cr.observacao }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<a href="{% url 'cadastrar_contas_receber' %}">Cadastrar Nova Conta a Receber</a>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}Lista de Fichas Médica{% endblock %}
+{% block content %}
+<h1>Lista de Ficha Médica</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Médico</th>
+            <th>Paciente</th>
+            <th>Data</th>
+            <th>Hora</th>
+            <th>descrição</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for fm in list_ficha_medica %}
+        <tr>
+            <td>{{ fm.idMedico }}</td>
+            <td>{{ fm.idPaciente }}</td>
+            <td>{{ fm.data }}</td>
+            <td>{{ fm.hora }}</td>
+            <td>{{ fm.descricao }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<a href="{% url 'cadastrar_ficha_medica' %}">Cadastrar Novo Ficha Médica</a>
+{% endblock %}

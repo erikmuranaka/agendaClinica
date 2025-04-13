@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}Alterar Paciente{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Alterar Paciente</h2>
+
+<form method="post">
+    {% csrf_token %}
+    
+    <div class="mb-3">
+        <label for="nome" class="form-label">Nome</label>
+        <input type="text" class="form-control" id="nome" name="nome" value="{{ form.nome.value }}" required>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+    <a href="{% url 'listar_pacientes' %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

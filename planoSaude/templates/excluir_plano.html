@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Excluir Plano de Saúde{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Excluir Plano de Saúde</h2>
+
+<p>Você tem certeza que deseja excluir o plano de saúde <strong>{{ plano.nome }}</strong>? Esta ação não pode ser desfeita.</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Confirmar Exclusão</button>
+    <a href="{% url 'listar_plano_saude' %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

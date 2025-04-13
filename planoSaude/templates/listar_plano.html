@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}Lista de Planos de Saúde{% endblock %}
+{% block content %}
+<h1>Lista de Plano de Saúde</h1>
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>CNPJ</th>
+                <th>E-Mail</th>
+                <th>Telefone</th>
+                <th>Estado</th>
+                <th>Cidade</th>
+                <th>Endereco</th>
+                <th>Ação</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ps in list_planos %}
+            <tr>
+                <td>{{ ps.id }}</td>
+                <td>{{ ps.nome }}</td>
+                <td>{{ ps.cnpj }}</td>
+                <td>{{ ps.email }}</td>
+                <td>{{ ps.telefone }}</td>
+                <td>{{ ps.estado }}</td>
+                <td>{{ ps.cidade }}</td>
+                <td>{{ ps.endereco }}</td>
+                <td>
+                    <!-- Botões de Alterar e Excluir -->
+                    <a href="{% url 'alterar_plano_saude' ps.id %}" class="btn btn-warning btn-sm">
+                        <i class="fas fa-edit"></i> Alterar
+                    </a>
+                    <a href="{% url 'excluir_plano_saude' ps.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir este plano?')">
+                        <i class="fas fa-trash-alt"></i> Excluir
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<!-- Botão para cadastrar -->
+<a href="{% url 'cadastrar_plano_saude' %}">
+    <i class="fas fa-plus"></i> Cadastrar Novo Plano
+</a>
+{% endblock %}
