@@ -99,7 +99,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'agendaClinica_Muranaka',
         'USER': 'dev',
-        'PASSWORD': '@Yas1404',
+        'PASSWORD': '@1234',
         'HOST': 'localhost',
         'PORT': '5432',
     }
