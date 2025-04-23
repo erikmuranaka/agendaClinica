@@ -4,4 +4,4 @@ from .models import planoSaude
 class PlanoSaudeSerializer(serializers.ModelSerializer):
     class Meta:
         model = planoSaude
-        fields = '__all__'
+        fields = ['id', 'nome', 'cnpj', 'telefone', 'email', 'endereco', 'cidade', 'estado', 'cep', 'numero', 'ativo']

@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}Alterar lançamento de Contas a Receber{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Alterar lançamento de Contas a Receber</h2>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <input type="text" class="form-control" id="medico" name="medico" value="{{ form.idMedico.value }}" required>
+            </div>
+            <div class="col-md-4 mb-3">
+                <input type="text" class="form-control" id="descricao" name="descricao" value="{{ form.descricao.value }}" required>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <input type="text" class="form-control" id="dataEmissao" name="dataEmissao" value= "{{ form.dataEmissao.value|date:'d/m/Y' }}" required>
+            </div>
+            <div class="col-md-4 mb-3">
+                <input type="text" class="form-control" id="dataVencimento" name="dataVencimento" value= "{{ form.dataVencimento.value|date:'d/m/Y' }}" required>
+            </div>
+            <div class="col-md-4 mb-3">
+                <input type="text" class="form-control" id="dataRecebimento" name="dataRecebimento" value= "{{ form.dataRecebimento.value|date:'d/m/Y' }}" required>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <input type="text" class="form-control" id="idPaciente" name="idPaciente" value="{{ form.idPaciente.value }}">
+            </div>
+            <div class="col-md-4 mb-3">
+                <input type="email" class="form-control" id="idPlano" name="idPlano" value="{{ form.idPlano.value }}">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <input type="text" class="form-control" id="formaPagamento" name="formaPagamento" value="{{ form.formaPagamento.value }}">
+            </div>
+            <div class="col-md-4 mb-3">
+                <input type="text" class="form-control" id="valor" name="valor" value="{{ form.valor.value }}">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <input type="text" class="form-control" id="centroReceita" name="centroReceita" value="{{ form.centroReceita.value }}">
+            </div>
+            <div class="col-md-8 mb-3">
+                <input type="text" class="form-control" id="tipoConta" name="tipoConta" value="{{ form.tipoConta.value }}">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <input type="text" class="form-control" id="observacao" name="observacao" value="{{ form.observacao.value }}">
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+        <a href="{% url 'listar_cr' %}" class="btn btn-secondary">Cancelar</a>
+
+    </form>
+    <script>
+        $(document).ready(function(){
+            $('#dataEmissao').mask('00/00/0000');
+            $('#dataVencimento').mask('00/00/0000');
+            $('#dataRecebimento').mask('00/00/0000');
+        });
+    </script>
+</div>
+{% endblock %}

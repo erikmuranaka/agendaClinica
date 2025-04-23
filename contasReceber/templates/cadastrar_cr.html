@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block title %}Lançar Contas a Receber{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Lançar Contas a Receber</h2>
+    
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="row">
+
+            <div class="col-md-4 mb-3">
+                <label for="idMedico" class="form-label">Médico:</label>
+                <select id="idMedico" name="idMedico" class="form-select" required>
+                    <option value="" disabled selected>Selecione um médico</option>
+                    {% for medico in medicos %}
+                        <option value="{{ medico.id }}">{{ medico.nome }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-md-8 mb-3">
+                <label for="descricao" class="form-label">Descrição</label>
+                <input type="text" class="form-control" id="descricao" name="descricao" required>
+            </div>
+        </div>
+		
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label for="dataEmissao" class="form-label">Data de Emissão</label>
+                <input type="date" id="dataEmissao" name="dataEmissao" class="form-control">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="dataVencimento" class="form-label">Data de Vencimento</label>
+                <input type="date" id="dataVencimento" name="dataVencimento" class="form-control">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="dataRecebimento" class="form-label">Data de Recebimento</label>
+                <input type="date" id="dataRecebimento" name="dataRecebimento" class="form-control">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label for="idPaciente" class="form-label">Paciente:</label>
+                <select id="idPaciente" name="idPaciente" class="form-select" required>
+                    <option value="" disabled selected>Selecione um paciente</option>
+                    {% for paciente in pacientes %}
+                        <option value="{{ paciente.id }}">{{ paciente.nome }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="col-md-4 mb-3">
+                <label for="idPlano" class="form-label">Plano de Saúde:</label>
+                <select id="idPlano" name="idPlano" class="form-select" required>
+                    <option value="" disabled selected>Selecione um plano de saúde</option>
+                    {% for plano in planos %}
+                        <option value="{{ plano.id }}">{{ plano.nome }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label for="valor" class="form-label">Valor</label>
+                <input type="text" class="form-control" id="valor" name="valor">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <div class="mb-3">
+                    <label for="formaPagamento" class="form-label">Escolha uma Forma de Pagamento</label>
+                    <select id="formaPagamento" name="formaPagamento" class="form-select" required>
+                        <option value="" disabled selected>Selecione uma opção</option>
+                        <option value="dinheiro">Dinheiro</option>
+                        <option value="debito">Débito</option>
+                        <option value="credito">Crédito</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="tipoConta" class="form-label">Tipo de Conta</label>
+                <input type="text" class="form-control" id="tipoConta" name="tipoConta">
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="centroReceita" class="form-label">Centro de Receita</label>
+                <input type="text" class="form-control" id="centroReceita" name="centroReceita">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="mb-3">
+                <label for="observacoes" class="form-label">Observação</label>
+                <textarea id="observacoes" name="observacoes" class="form-control" rows="6" placeholder="Digite as observações aqui"></textarea>
+            </div>
+        </div>
+
+		<button type="submit" class="btn btn-primary">Salvar</button>
+		<a href="{% url 'listar_cr' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

@@ -3,41 +3,66 @@
 {% block title %}Cadastrar Plano de Saúde{% endblock %}
 
 {% block content %}
-<h2 class="mb-4">Cadastrar Plano de Saúde</h2>
-
-<form method="post">
-    {% csrf_token %}
-	
-    <div class="mb-3">
-        <label for="nome" class="form-label">Nome</label>
-        <input type="text" class="form-control" id="nome" name="nome" placeholder="Nome do Plano de Saúde">
-    </div>
-    <div class="mb-3">
-        <label for="cnpj" class="form-label">CNPJ</label>
-        <input type="text" class="form-control" id="cnpj" name="cnpj" placeholder="CNPJ">
-    </div>
-    <div class="mb-3">
-        <label for="email" class="form-label">E-Mail</label>
-        <input type="text" class="form-control" id="email" name="email" placeholder="E-Mail">
-    </div>
-    <div class="mb-3">
-        <label for="telefone" class="form-label">Telefone Ex: (00) 00000-0000</label>
-        <input type="text" class="form-control" id="telefone" name="telefone" placeholder="Telefone">
-    </div>
-    <div class="mb-3">
-        <label for="estado" class="form-label">Estado</label>
-        <input type="text" class="form-control" id="estado" name="estado" placeholder="Estado">
-    </div>
-    <div class="mb-3">
-        <label for="cidade" class="form-label">Cidade</label>
-        <input type="text" class="form-control" id="cidade" name="cidade" placeholder="Cidade">
-    </div>
-    <div class="mb-3">
-        <label for="endereco" class="form-label">Endereco</label>
-        <input type="text" class="form-control" id="endereco" name="endereco" placeholder="Endereco Completo">
-    </div>
+<div class="container mt-5">
+    <h2 class="mb-4">Cadastrar Plano de Saúde</h2>
     
-    <button type="submit" class="btn btn-primary">Salvar</button>
-    <a href="{% url 'listar_plano_saude' %}" class="btn btn-secondary">Cancelar</a>
-  </form>
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="row">
+			<div class="col-md-4 mb-3">
+				<input type="text" class="form-control" id="nome" name="nome" placeholder="Nome do Plano de Saúde">
+			</div>
+			<div class="col-md-4 mb-3">
+				<input type="text" class="form-control" id="cnpj" name="cnpj" placeholder="CNPJ">
+			</div>
+        </div>
+		
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <input type="text" class="form-control" id="telefone" name="telefone" placeholder="Telefone">
+            </div>
+            <div class="col-md-4 mb-3">
+                <input type="email" class="form-control" id="email" name="email" placeholder="E-mail">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <input type="text" class="form-control" id="cep" name="cep" placeholder="CEP">
+            </div>
+            <div class="col-md-4 mb-3">
+                <input type="text" class="form-control" id="estado" name="estado" placeholder="Estado">
+            </div>
+            <div class="col-md-4 mb-3">
+                <input type="text" class="form-control" id="cidade" name="cidade" placeholder="Cidade">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8 mb-3">
+                <input type="text" class="form-control" id="endereco" name="endereco" placeholder="Endereço Completo">
+            </div>
+            <div class="col-md-4 mb-3">
+                <input type="text" class="form-control" id="numero" name="numero" placeholder="Número">
+            </div>
+        </div>
+
+		<button type="submit" class="btn btn-primary">Salvar</button>
+		<a href="{% url 'listar_plano' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+
+    <script>
+        $(document).ready(function(){
+            $('#cnpj').mask('00.000.000/0000-00');
+            $('#telefone').blur(function(event) {
+                if($(this).val().length == 15) { // Máscara para telefone celular
+                    $(this).mask('(00) 00000-0000');
+                } else {
+                    $(this).mask('(00) 0000-0000');
+                }
+            });
+            $('#cep').mask('00000-000'); // Máscara para CEP
+        });
+    </script>
+</div>
 {% endblock %}

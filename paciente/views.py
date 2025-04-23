@@ -1,62 +1,89 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
-from .models import paciente
-from .forms import pacienteForm
+from django.db import models
+from .models import paciente as dadosdb
+from .forms import pacienteForm as form
 
-def listar_pacientes(request):
+def listar(request):
 
-    obj_pacientes = paciente.objects.all()
+    query = request.GET.get('search')  # Captura o valor do campo de pesquisa
 
-    return render(request, 'listar_paciente.html', {'list_pacientes': obj_pacientes})
-
-def cadastrar_paciente(request):
-
-    if request.method == 'POST':
-
-        print(f"Request POST: {request.POST}")  # Debugging line to check request data
-
-        #form = pacienteForm(request.POST)
-
-        form = pacienteForm(data={'nome': 'Erik Hitoshi', 'CPF': '313.671.308-75', 'dataNascimento': '06/07/1983', 'telefone': '(19) 9827-4170', 'email': 'eh.muranaka@gmail.com', 'cep': '13468-847', 'endereco': 'Rua Emílio Alfeo Cordenonssi', 'numero': '48'})
-        print(form.is_valid())  # Deve ser True
-
-        # if form.is_valid():
-
-        #     print(f"Form Valido")  # Debugging line to check form data
-        #     form.save()
-        #     messages.success(request, "Paciente cadastrado com sucesso.")
-        #     return redirect('listar_pacientes')
-        # else:
-        #     print(f"Form Invalido")
-        #     print(f"Erro form: {form.errors}")
-        #     messages.error(request, "Erro ao cadastrar paciente.")
-    else:
-        form = pacienteForm()
-
-    return render(request, 'cadastrar_paciente.html', {'form': form})
-
-def alterar_paciente(request, paciente_id):
-
-    obj_paciente = get_object_or_404(paciente, id=paciente_id)
-
-    if request.method == 'POST':
-        form = pacienteForm(request.POST, instance=obj_paciente)
-        if form.is_valid():
-            form.save()
-            return redirect('listar_pacientes')
-    else:
-        form = pacienteForm(instance=obj_paciente)
-
-    return render(request, 'alterar_paciente.html', {'form': form})
-
-def excluir_paciente(request, paciente_id):
-
-    obj_paciente = get_object_or_404(paciente, id=paciente_id)
+    ativo_filter = 'on'
     
-    if request.method == 'POST':
-        paciente.delete()
-        messages.success(request, f"Paciente '{paciente.nome}' excluído com sucesso.")
+    obj_dados = dadosdb.objects.filter(ativo__icontains='True')
 
-        return redirect('listar_pacientes')
+    return render(request, 'listar_paciente.html', {'list_dados': obj_dados, 'ativo': ativo_filter})
+
+def pesquisar(request):
+
+    query = request.GET.get('search')
     
-    return render(request, 'excluir_paciente.html', {'paciente': paciente})
+    ativo_filter = request.GET.get('ativo')
+
+    if query:
+        obj_dados = dadosdb.objects.filter(
+             models.Q(nome__icontains=query) | models.Q(cpf__icontains=query)
+            )
+    else:
+        obj_dados = dadosdb.objects.filter()
+
+    ## Valida filtro da tela, para trazer os ativos e inativos
+    if ativo_filter == 'on':
+        obj_dados = obj_dados.filter(ativo=True)
+    elif ativo_filter == 'off':
+        obj_dados = obj_dados.filter(ativo=False)
+    
+    return render(request, 'listar_paciente.html', {'list_dados': obj_dados, 'ativo': ativo_filter})
+
+def cadastrar(request):
+
+    if request.method == 'POST':
+
+        formDados = form(request.POST)
+
+        if formDados.is_valid():
+
+            paciente_dados = formDados.save(commit=False)
+            paciente_dados.ativo = True
+            paciente_dados.save()
+
+            messages.success(request, "Cadastrado realizado com sucesso.")
+            return redirect('listar_paciente')
+        else:
+            print(f"Erro formDados: {formDados.errors}")
+            messages.error(request, "Erro ao realizar o cadastro.")
+    else:
+        formDados = form()
+
+    return render(request, 'cadastrar_paciente.html', {'form': formDados})
+
+def alterar(request, id):
+
+    obj_dados = get_object_or_404(dadosdb, id=id)
+
+    if request.method == 'POST':
+        formDados = form(request.POST, instance=obj_dados)
+        
+        if formDados.is_valid():
+            formDados.save()
+            return redirect('listar_paciente')
+        else:
+            print(f"Erro ao salvar a alteração: {formDados.errors}")
+            messages.error(request, "Erro ao realizar a alteração")
+    else:
+        formDados = form(instance=obj_dados)
+
+    return render(request, 'alterar_paciente.html', {'form': formDados})
+
+def excluir(request, id):
+    # Busca o paciente no banco de dados
+    obj_dados = get_object_or_404(dadosdb, id=id)
+
+    # Atualiza o campo 'ativo' para False
+    obj_dados.ativo = False
+    obj_dados.save()
+
+    # Exibe uma mensagem de sucesso
+    messages.success(request, f"'{obj_dados.nome}' foi excluido com sucesso.")
+
+    return redirect('listar_paciente')

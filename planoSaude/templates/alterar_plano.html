@@ -3,41 +3,77 @@
 {% block title %}Alterar Plano de Saúde{% endblock %}
 
 {% block content %}
-<h2 class="mb-4">Alterar Plano de Saúde</h2>
+<div class="container mt-5">
+    <h2 class="mb-4">Alterar Plano de Saúde</h2>
 
-<form method="post">
-    {% csrf_token %}
-    
-    <div class="mb-3">
-        <label for="nome" class="form-label">Nome</label>
-        <input type="text" class="form-control" id="nome" name="nome" value="{{ form.nome.value }}" required>
-    </div>
-    <div class="mb-3">
-        <label for="cnpj" class="form-label">CNPJ</label>
-        <input type="text" class="form-control" id="cnpj" name="cnpj" value="{{ form.cnpj.value }}">
-    </div>
-    <div class="mb-3">
-        <label for="email" class="form-label">E-Mail</label>
-        <input type="text" class="form-control" id="email" name="email" value="{{ form.email.value }}">
-    </div>
-    <div class="mb-3">
-        <label for="telefone" class="form-label">Telefone Ex: (00) 00000-0000</label>
-        <input type="text" class="form-control" id="telefone" name="telefone" value="{{ form.telefone.value }}">
-    </div>
-    <div class="mb-3">
-        <label for="estado" class="form-label">Estado</label>
-        <input type="text" class="form-control" id="estado" name="estado" value="{{ form.estado.value }}">
-    </div>
-    <div class="mb-3">
-        <label for="cidade" class="form-label">Cidade</label>
-        <input type="text" class="form-control" id="cidade" name="cidade" value="{{ form.cidade.value }}">
-    </div>
-    <div class="mb-3">
-        <label for="endereco" class="form-label">Endereco</label>
-        <input type="text" class="form-control" id="endereco" name="endereco" value="{{ form.endereco.value }}">
-    </div>    
+    <form method="post">
+        {% csrf_token %}
 
-    <button type="submit" class="btn btn-primary">Salvar Alterações</button>
-    <a href="{% url 'listar_plano_saude' %}" class="btn btn-secondary">Cancelar</a>
-</form>
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <!-- Checkbox de ativo -->
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="ativo" name="ativo" 
+                        {% if form.ativo.value %}checked{% endif %}>
+                    <label for="ativo" class="form-check-label">Ativo</label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <input type="text" class="form-control" id="nome" name="nome" value="{{ form.nome.value }}" required>
+            </div>
+            <div class="col-md-4 mb-3">
+                <input type="text" class="form-control" id="cnpj" name="cnpj" value="{{ form.cnpj.value }}" required>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <input type="text" class="form-control" id="telefone" name="telefone" value="{{ form.telefone.value }}">
+            </div>
+            <div class="col-md-4 mb-3">
+                <input type="email" class="form-control" id="email" name="email" value="{{ form.email.value }}">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <input type="text" class="form-control" id="cep" name="cep" value="{{ form.cep.value }}">
+            </div>
+            <div class="col-md-4 mb-3">
+                <input type="text" class="form-control" id="estado" name="estado" value="{{ form.estado.value }}">
+            </div>
+            <div class="col-md-4 mb-3">
+                <input type="text" class="form-control" id="cidade" name="cidade" value="{{ form.cidade.value }}">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8 mb-3">
+                <input type="text" class="form-control" id="endereco" name="endereco" value="{{ form.endereco.value }}">
+            </div>
+            <div class="col-md-4 mb-3">
+                <input type="text" class="form-control" id="numero" name="numero" value="{{ form.numero.value }}">
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+        <a href="{% url 'listar_plano' %}" class="btn btn-secondary">Cancelar</a>
+
+    </form>
+    <script>
+        $(document).ready(function(){
+            $('#cnpj').mask('00.000.000/0000-00');
+            $('#telefone').blur(function(event) {
+                if($(this).val().length == 15) { // Máscara para telefone celular
+                    $(this).mask('(00) 00000-0000');
+                } else {
+                    $(this).mask('(00) 0000-0000');
+                }
+            });
+            $('#cep').mask('00000-000'); // Máscara para CEP
+        });
+    </script>
+</div>
 {% endblock %}

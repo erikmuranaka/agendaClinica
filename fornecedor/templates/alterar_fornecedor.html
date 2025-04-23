@@ -1,16 +1,17 @@
 {% extends 'base.html' %}
 
-{% block title %}Alterar Paciente{% endblock %}
+{% block title %}Alterar Plano de Saúde{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
-    <h2 class="mb-4">Alterar de Paciente</h2>
+    <h2 class="mb-4">Alterar Plano de Saúde</h2>
 
     <form method="post">
         {% csrf_token %}
 
         <div class="row">
             <div class="col-md-4 mb-3">
+                <!-- Checkbox de ativo -->
                 <div class="form-check">
                     <input type="checkbox" class="form-check-input" id="ativo" name="ativo" 
                         {% if form.ativo.value %}checked{% endif %}>
@@ -24,10 +25,10 @@
                 <input type="text" class="form-control" id="nome" name="nome" value="{{ form.nome.value }}" required>
             </div>
             <div class="col-md-4 mb-3">
-                <input type="text" class="form-control" id="cpf" name="cpf" value="{{ form.cpf.value }}" required>
+                <input type="text" class="form-control" id="razaoSocial" name="razaoSocial" value="{{ form.razaoSocial.value }}" required>
             </div>
             <div class="col-md-4 mb-3">
-                <input type="text" class="form-control" id="dataNascimento" name="dataNascimento" value= "{{ form.dataNascimento.value|date:"d/m/Y" }}" required>
+                <input type="text" class="form-control" id="cnpj" name="cnpj" value="{{ form.cnpj.value }}" required>
             </div>
         </div>
         
@@ -61,12 +62,12 @@
         </div>
 
         <button type="submit" class="btn btn-primary">Salvar Alterações</button>
-        <a href="{% url 'listar_paciente' %}" class="btn btn-secondary">Cancelar</a>
+        <a href="{% url 'listar_fornecedor' %}" class="btn btn-secondary">Cancelar</a>
 
     </form>
     <script>
         $(document).ready(function(){
-            $('#cpf').mask('000.000.000-00');
+            $('#cnpj').mask('00.000.000/0000-00');
             $('#telefone').blur(function(event) {
                 if($(this).val().length == 15) { // Máscara para telefone celular
                     $(this).mask('(00) 00000-0000');
@@ -75,7 +76,6 @@
                 }
             });
             $('#cep').mask('00000-000'); // Máscara para CEP
-            $('#dataNascimento').mask('00/00/0000'); // Máscara para Data de Nascimento
         });
     </script>
 </div>

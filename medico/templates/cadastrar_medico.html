@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Cadastrar Médicos{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Cadastro de Médicos</h2>
+    
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <input type="text" class="form-control" id="nome" name="nome" placeholder="Nome" required>
+            </div>
+            <div class="col-md-4 mb-3">
+                <input type="text" class="form-control" id="crm" name="crm" placeholder="CRM" required>
+            </div>
+        </div>
+		
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <input type="text" class="form-control" id="telefone" name="telefone" placeholder="Telefone">
+            </div>
+            <div class="col-md-4 mb-3">
+                <input type="email" class="form-control" id="email" name="email" placeholder="E-mail">
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <input type="text" class="form-control" id="especialidade" name="especialidade" placeholder="Especialidade">
+            </div>
+        </div>
+
+		<button type="submit" class="btn btn-primary">Salvar</button>
+		<a href="{% url 'listar_medico' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+
+    <script>
+        $(document).ready(function(){
+            $('#telefone').blur(function(event) {
+                if($(this).val().length == 15) { // Máscara para telefone celular
+                    $(this).mask('(00) 00000-0000');
+                } else {
+                    $(this).mask('(00) 0000-0000');
+                }
+            });
+        });
+    </script>
+</div>
+{% endblock %}

@@ -1,49 +1,95 @@
 {% extends 'base.html' %}
-{% block title %}Lista de Planos de Saúde{% endblock %}
+
+{% block title %}Lista de Plano de Saúde{% endblock %}
+
 {% block content %}
-<h1>Lista de Plano de Saúde</h1>
-<div class="table-responsive">
-    <table class="table table-striped table-hover">
-        <thead class="table-dark">
-            <tr>
-                <th>ID</th>
-                <th>Nome</th>
-                <th>CNPJ</th>
-                <th>E-Mail</th>
-                <th>Telefone</th>
-                <th>Estado</th>
-                <th>Cidade</th>
-                <th>Endereco</th>
-                <th>Ação</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for ps in list_planos %}
-            <tr>
-                <td>{{ ps.id }}</td>
-                <td>{{ ps.nome }}</td>
-                <td>{{ ps.cnpj }}</td>
-                <td>{{ ps.email }}</td>
-                <td>{{ ps.telefone }}</td>
-                <td>{{ ps.estado }}</td>
-                <td>{{ ps.cidade }}</td>
-                <td>{{ ps.endereco }}</td>
-                <td>
-                    <!-- Botões de Alterar e Excluir -->
-                    <a href="{% url 'alterar_plano_saude' ps.id %}" class="btn btn-warning btn-sm">
-                        <i class="fas fa-edit"></i> Alterar
-                    </a>
-                    <a href="{% url 'excluir_plano_saude' ps.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir este plano?')">
-                        <i class="fas fa-trash-alt"></i> Excluir
-                    </a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<div class="container mt-4">
+    <h2 class="mb-1">
+        <i class="bi bi-person">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
+                <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z"/>
+            </svg>
+            Lista de Plano de Saúde
+        </i>
+    </h2>
+
+    <form method="get" class="d-flex justify-content-between align-items-center mb-3" action="{% url 'pesquisar_plano' %}">
+        <div class="d-flex w-100">
+            <div class="d-flex w-75">
+                <input type="text" name="search" class="form-control me-2" placeholder="Pesquisar por Nome ou Documento" value="{{ request.GET.search }}">
+                <button type="submit" class="btn btn-primary">Pesquisar</button>
+            </div>
+
+            <div>
+                <a href="{% url 'cadastrar_plano' %}" class="btn btn-success">
+                    <i class="fas fa-plus"></i> Adicionar plano
+                </a>
+            </div>
+        </div>
+        <div class="d-flex w3">
+            <div class="form-check">
+                <input type="checkbox" name="ativo" id="ativo" class="form-check-input" checked>
+                <label for="ativo" class="form-check-label">Ativos</label>
+            </div>
+        </div>
+    </form>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+			<thead class="text-center">
+				<tr>
+					<th>Nome</th>
+					<th>CNPJ</th>
+					<th>Telefone</th>
+                    <th>Ativo</th>
+                    <th>Ações</th>
+				</tr>
+			</thead>
+			{% if list_dados %}
+			<tbody>
+				{% for dados in list_dados %}
+				<tr>
+					<td>{{ dados.nome }}</td>
+					<td>{{ dados.cnpj }}</td>
+					<td>{{ dados.telefone }}</td>
+                    <td class="text-center">
+                        <input type="checkbox" name="ativo" id="ativo" class="form-check-input" {% if dados.ativo == True %}checked{% endif %} disabled>
+                    </td>
+                    <td class="text-center">
+                        <div class="btn-group"  role="group">
+                            <!-- Botão de Detalhes -->
+                            <button class="btn btn-info btn-sm" data-bs-toggle="collapse" data-bs-target="#detalhes-{{ dados.id }}">
+                                <span id="icon-{{ dados.id }}"></span> + Detalhes
+                            </button>
+                            <!-- Botão de Alterar -->
+                            <a href="{% url 'alterar_plano' dados.id %}" class="btn btn-warning btn-sm">
+                                <i class="fas fa-edit"></i> Alterar
+                            </a>
+                            <!-- Botão de Excluir -->
+                            <a href="{% url 'excluir_plano' dados.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir este plano de saúde ?')">
+                                <i class="fas fa-trash-alt"></i> Excluir
+                            </a>
+                        </div>
+                    </td>
+				</tr>
+				<tr id="detalhes-{{ dados.id }}" class="collapse">
+					<td colspan="4">
+                        <strong>Data Cadastro:</strong> {{ dados.dataCadastro|date:"d/m/Y" }}<br>
+                        <strong>E-mail:</strong> {{ dados.email }}<br>
+						<strong>CEP:</strong> {{ dados.cep }} - {{ dados.endereco }}, {{ dados.numero }} | {{ dados.cidade }} - {{ dados.estado }}<br>
+                                              
+					</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+			{% else %}
+			<tbody>
+				<tr>
+					<td colspan="4" class="text-center">Nenhum plano de saúde encontrado.</td>
+				</tr>
+			</tbody>
+			{% endif %}
+        </table>
+    </div>
 </div>
-<!-- Botão para cadastrar -->
-<a href="{% url 'cadastrar_plano_saude' %}">
-    <i class="fas fa-plus"></i> Cadastrar Novo Plano
-</a>
 {% endblock %}

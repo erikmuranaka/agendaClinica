@@ -4,4 +4,4 @@ from .models import medico
 class MedicoSerializer(serializers.ModelSerializer):
     class Meta:
         model = medico
-        fields = '__all__'
+        fields = ['nome', 'crm', 'especialidade', 'telefone', 'email', 'ativo']

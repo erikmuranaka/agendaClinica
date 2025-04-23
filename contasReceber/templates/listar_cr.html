@@ -1,46 +1,100 @@
 {% extends 'base.html' %}
-{% block title %}Lista de Contas a Receber{% endblock %}
+
+{% block title %}Lista Lançamentos a Receber{% endblock %}
+
 {% block content %}
-<h1>Lista de Contas a Receber</h1>
-<table>
-    <thead>
-        <tr>
-            <th>id</th>
-            <th>Médico</th>
-            <th>Paciente</th>
-            <th>Data de Emissão</th>
-            <th>Plano</th>
-            <th>Descrição</th>
-            <th>Tipo de Conta</th>
-            <th>Data Vencimento</th>
-            <th>Data Pagamento</th>
-            <th>Valor</th>
-            <th>Forma de Pagamento</th>
-            <th>Centro de Receita</th>
-            <th>Data Recebimento</th>
-            <th>Observação</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for cr in list_contas_receber %}
-        <tr>
-            <td>{{ cr.id }}</td>
-            <td>{{ cr.Médico }}</td>
-            <td>{{ cr.Paciente }}</td>
-            <td>{{ cr.dataEmissao }}</td>
-            <td>{{ cr.idPlanos }}</td>
-            <td>{{ cr.descricao }}</td>
-            <td>{{ cr.tipoConta }}</td>
-            <td>{{ cr.dataVencimento }}</td>
-            <td>{{ cr.dataPagamento }}</td>
-            <td>{{ cr.valor }}</td>
-            <td>{{ cr.formaPagamento }}</td>
-            <td>{{ cr.centroReceita }}</td>
-            <td>{{ cr.dataRecebimento }}</td>
-            <td>{{ cr.observacao }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-<a href="{% url 'cadastrar_contas_receber' %}">Cadastrar Nova Conta a Receber</a>
+<div class="container mt-4">
+    <h2 class="mb-1">
+        <i class="bi bi-person">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
+                <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z"/>
+            </svg>
+            Lista Lançamentos a Receber
+        </i>
+    </h2>
+
+    <form method="get" class="d-flex justify-content-between align-items-center mb-3" action="{% url 'pesquisar_cr' %}">
+        <div class="d-flex w-100">
+            <div class="d-flex w-75">
+                <input type="text" name="search" class="form-control me-2" placeholder="Pesquisar por Nome ou Documento ou Datas" value="{{ request.GET.search }}">
+                <button type="submit" class="btn btn-primary">Pesquisar</button>
+            </div>
+
+            <div>
+                <a href="{% url 'cadastrar_cr' %}" class="btn btn-success">
+                    <i class="fas fa-plus"></i> Realizar Lançamento
+                </a>
+            </div>
+        </div>
+    </form>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+			<thead class="text-center">
+				<tr>
+                    <th>Médico</th>
+                    <th>Descrição</th>
+                    <th>Data de Emissão</th>
+                    <th>Data Vencimento</th>
+                    <th>Data Recebimento</th>
+                    <th>Valor</th>
+                    <th>Forma de Pagamento</th>
+                    <th>Fonte Pagadora</th>
+                    <th>Ações</th>
+				</tr>
+			</thead>
+			{% if list_dados %}
+			<tbody>
+				{% for dados in list_dados %}
+				<tr>
+                    <td>{{ dados.idMedico }}</td>
+                    <td>{{ dados.descricao }}</td>
+                    <td>{{ dados.dataEmissao|date:"d/m/Y" }}</td>
+                    <td>{{ dados.dataVencimento|date:"d/m/Y" }}</td>
+                    <td>{{ dados.dataRecebimento|date:"d/m/Y" }}</td>
+                    <td>{{ dados.valor }}</td>
+                    <td>{{ dados.formaPagamento }}</td>
+                    <td>
+                        {% if dados.idPaciente_id %}
+                            {{ dados.idPaciente.nome }}
+                        {% else %}
+                            {{ dados.idPlano.nome }}
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        <div class="btn-group"  role="group">
+                            <!-- Botão de Detalhes -->
+                            <button class="btn btn-info btn-sm" data-bs-toggle="collapse" data-bs-target="#detalhes-{{ dados.id }}">
+                                <span id="icon-{{ dados.id }}"></span> + Detalhes
+                            </button>
+                            <!-- Botão de Alterar -->
+                            <a href="{% url 'alterar_cr' dados.id %}" class="btn btn-warning btn-sm">
+                                <i class="fas fa-edit"></i> Alterar
+                            </a>
+                            <!-- Botão de Excluir -->
+                            <a href="{% url 'excluir_cr' dados.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir este plano de saúde ?')">
+                                <i class="fas fa-trash-alt"></i> Excluir
+                            </a>
+                        </div>
+                    </td>
+				</tr>
+				<tr id="detalhes-{{ dados.id }}" class="collapse">
+					<td colspan="4">
+                        <strong>Tipo de Conta:</strong> {{ dados.tipoConta }}<br>
+                        <strong>Centro de Receita:</strong> {{ dados.centroReceita }}<br>
+                        <strong>Observação:</strong> {{ dados.observacao }}<br>
+					</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+			{% else %}
+			<tbody>
+				<tr>
+					<td colspan="4" class="text-center">Nenhuma informação foi encontrada.</td>
+				</tr>
+			</tbody>
+			{% endif %}
+        </table>
+    </div>
+</div>
 {% endblock %}
