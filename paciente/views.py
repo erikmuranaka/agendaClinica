@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.db import models
 from .models import paciente as dadosdb
 from .forms import pacienteForm as form
+from medico.models import medico
 
 def listar(request):
 
@@ -12,7 +13,10 @@ def listar(request):
     
     obj_dados = dadosdb.objects.filter(ativo__icontains='True')
 
-    return render(request, 'listar_paciente.html', {'list_dados': obj_dados, 'ativo': ativo_filter})
+    medico_id = request.session.get('medico_id')  # Recupera o médico da sessão
+    obj_medico = medico.objects.get(id=medico_id) if medico_id else None
+
+    return render(request, 'listar_paciente.html', {'list_dados': obj_dados, 'ativo': ativo_filter, 'medico': obj_medico})
 
 def pesquisar(request):
 

@@ -1,0 +1,204 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista de Pacientes{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-1">
+        <i class="bi bi-person">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
+                <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z"/>
+            </svg>
+            Calendário de Consultas
+        </i>
+    </h2>
+    <style>
+        #calendar {
+            width: 100%; /* Ajusta a largura do calendário ao container */
+            max-width: 800px; /* Limita a largura máxima */
+            height: auto; /* Define a altura automaticamente */
+            text-size-adjust: 6px;
+        }
+    </style>
+    <div id="calendar"></div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                locale: 'pt-br',
+                headerToolbar: {
+                    left: 'prev,next',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                buttonText: {
+                    month: 'Mês',
+                    week: 'Semana',
+                    day: 'Dia'
+                },
+                events: 'listar_consulta',
+                dateClick: function(info) {
+                    // Atualize os campos do modal com a data clicada
+                    document.getElementById('modal-data').value = info.dateStr;
+                    // Abra o modal
+                    var modal = new bootstrap.Modal(document.getElementById('newEventModal'), {});
+                    modal.show();
+                },
+                eventClick: function(info) {
+                   // Exibe as informações do evento clicado no modal
+                    document.getElementById('modal-title').innerText = info.event.title;
+                    document.getElementById('modal-telefone').innerText = info.event.extendedProps.telefone;
+                    document.getElementById('modal-start').innerText = info.event.start.toLocaleString();
+                    document.getElementById('modal-descricao').innerText = info.event.extendedProps.descricao;
+                    // Abre o modal
+                    var modal = new bootstrap.Modal(document.getElementById('eventModal'), {});
+                    modal.show();
+                }
+            });
+            calendar.render();
+
+        });
+    </script>
+</div>
+
+<div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal-title">Detalhes da Consulta</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Data e Hora:</strong> <span id="modal-start"></span></p>
+                <p><strong>Telefone:</strong> <span id="modal-telefone"></span></p>
+                <p><strong>Descrição:</strong> <span id="modal-descricao"></span></p>
+            </div>
+            <form method="post" action="agendar_consulta/">
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Confirmar Consulta</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="newEventModal" tabindex="-1" aria-labelledby="newEventModalLabel" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newEventModalLabel">Agendar Nova Consulta</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="agendar_consulta/">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="modal-idMedico" class="form-label">Médico:</label>
+                        <select id="modal-idMedico" name="idMedico" class="form-select" >
+                            <option value="{{ medico_padrao.id }}">{{ medico_padrao.nome }}</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="modal-data" class="form-label">Data:</label>
+                        <input type="date" id="modal-data" name="data" class="form-control" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="modal-hora" class="form-label">Hora:</label>
+                        <input type="time" id="modal-hora" name="hora" class="form-control" step="1800" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="modal-descricao" class="form-label">Descrição:</label>
+                        <textarea id="modal-descricao" name="descricao" class="form-control"></textarea>
+                    </div>
+                    <div class="row">
+                        <label for="modal-idPaciente" class="form-label">Paciente:</label>
+                        <div class="col-md-10 mb-3">
+                            <select id="modal-idPaciente" name="idPaciente" class="form-select">
+                                {% for paciente in pacientes %}
+                                    <option value="{{ paciente.id }}">{{ paciente.nome }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-1 mb-3">
+                            <button type="button" class="btn btn-primary" id="newPacienteModalButton" data-bs-toggle="modal" data-bs-target="#newPacienteModal">+</button>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.getElementById('newPacienteModalButton').addEventListener('click', function() {
+
+            // Captura os valores do primeiro modal
+            const data = document.getElementById('modal-data').value;
+            const hora = document.getElementById('modal-hora').value;
+            const medico = document.getElementById('modal-idMedico').value;
+            const descricao = document.getElementsByName('descricao')[0].value
+
+            // Transfere os valores para o segundo modal
+            document.getElementById('modal-data2').value = data;
+            document.getElementById('modal-hora2').value = hora;
+            document.getElementById('modal-medico2').value = medico;
+            document.getElementById('modal-descricao2').value = descricao;
+        });
+    </script>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="newPacienteModal" tabindex="-1" aria-labelledby="newPacienteModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newPacienteModalLabel">Cadastrar Novo Paciente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="cadastrar_paciente/">
+                    {% csrf_token %}
+                    <div class="mb-3" style="display: none;">
+                        <input type="date" id="modal-data2" name="modal-data2" class="form-control" readonly>
+                        <input type="time" id="modal-hora2" name="modal-hora2" class="form-control" readonly>
+                        <input type="text" id="modal-medico2" name="modal-medico2" class="form-control" readonly>
+                        <textarea id="modal-descricao2" name="modal-descricao2" class="form-control" readonly></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="nomePaciente" class="form-label">Nome</label>
+                        <input type="text" class="form-control" id="nomePaciente" name="nomePaciente" placeholder="Digite o nome do paciente" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="cpfPaciente" class="form-label">CPF</label>
+                        <input type="text" class="form-control" id="cpfPaciente" name="cpfPaciente" placeholder="Digite o CPF" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="telefonePaciente" class="form-label">Telefone</label>
+                        <input type="text" class="form-control" id="telefonePaciente" name="telefonePaciente" placeholder="Digite o telefone" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Salvar</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+    <script>
+        $(document).ready(function(){
+            $('#cpfPaciente').mask('000.000.000-00');
+            $('#telefonePaciente').blur(function(event) {
+                if($(this).val().length == 15) { // Máscara para telefone celular
+                    $(this).mask('(00) 00000-0000');
+                } else {
+                    $(this).mask('(00) 0000-0000');
+                }
+            });
+        });
+    </script>
+</div>
+{% endblock %}

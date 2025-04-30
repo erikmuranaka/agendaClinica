@@ -11,4 +11,5 @@ urlpatterns = [
     path('contasreceber/', include('contasReceber.urls')),  # Rotas do aplicativo ContasReceber
     path('contaspagar/', include('contasPagar.urls')),  # Rotas do aplicativo ContasPagar
     path('medico/', include('medico.urls')),  # Rotas do aplicativo Medico
+    path('', include('accounts.urls')), # Rotas do aplicativo Accounts
 ]

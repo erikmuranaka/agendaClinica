@@ -25,3 +25,46 @@
     background-color: #000000cc; /* Cor do cabeçalho */
     color: rgb(255, 255, 255);             /* Texto branco */
 }
+
+.medico-fixed {
+    position: fixed; /* Fixa o elemento na tela */
+    top: 0;
+    right: 0;
+    font-size: 14;
+    background-color: #3899faad; /* Cor de fundo */
+    padding: 10px;           /* Espaçamento interno */
+    font-size: 14px;         /* Tamanho da fonte */
+    box-shadow: -2px -2px 5px rgba(0, 0, 0, 0.1); /* Sombras suaves */
+    border-bottom-left-radius: 10px; /* Borda arredondada no canto superior esquerdo */
+}
+
+.navbar {
+    position: fixed; /* Fixa a navbar no topo */
+    top: 0;          /* Define a posição no topo */
+    width: 100%;     /* Faz com que ocupe toda a largura da página */
+    z-index: 1030;   /* Garante que ela fique acima de outros elementos */
+    background-color: #3899faad; /* Cor de fundo da barra de navegação */
+    color: rgb(255, 255, 255); /* Cor do texto */    
+    box-shadow: -2px -2px 5px rgba(5, 5, 5, 0.1); /* Sombras suaves */
+}
+
+.navbar-brand {
+    font-size: 24px; /* Tamanho da fonte do título */
+    font-weight: bold; /* Negrito */
+    color: rgb(255, 255, 255); /* Cor do texto */
+}
+
+.nav-item a {
+    color: rgb(255, 255, 255); /* Cor do texto */
+    text-decoration: none; /* Remove o sublinhado */
+    padding: 2px; /* Espaçamento interno */
+    border-radius: 5px; /* Bordas arredondadas */
+    transition: background-color 0.3s; /* Transição suave para a cor de fundo */
+    text-transform: uppercase; /* Texto em letras maiúsculas */
+    font-size: 14px; /* Tamanho da fonte */
+    font-weight: bold; /* Negrito */
+}
+
+body {
+    margin-top: 70px; /* Ajuste o valor conforme a altura da navbar */
+}
